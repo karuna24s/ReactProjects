@@ -1,0 +1,156 @@
+  <!-- DOCTYPE HTML -->
+<!-- <html>
+    <head>
+        <title>Todo app</title>
+   /* <style>
+        .list-item{
+        	width: 100%;
+        	border: solid 1px red;
+        }
+        h1{
+        	font-family: sans-serif;
+        	text-align: center;
+        	font-size: 36px;
+        }
+        #content{
+        	width: 960px;
+        	margin: 0 auto;
+        	border: solid 1px blue;
+        }
+    </style>*/
+    </head>
+    <body>
+
+      <div>
+        <h1>To Do</h1>
+        <div id="content"></div>
+      </div>
+        <script src="https://fb.me/react-with-addons-0.13.3.js"></script>
+        <script src="http://fb.me/JSXTransformer-0.12.1.js"></script>
+        <script type="text/jsx" src="main.js">
+        </script>
+</html> -->
+
+<!-- DOCTYPE HTML -->
+<html>
+    <head>
+        <title>Todo app</title>
+    </head>
+    <body>
+        <div id="content"></div>
+        <script src="https://fb.me/react-with-addons-0.13.3.js"></script>
+        <script src="http://fb.me/JSXTransformer-0.12.1.js"></script>
+        <script type="text/jsx">
+
+        var TodoItem = React.createClass({
+        	render:function() {
+        		return(
+                    <li>
+                       {this.props.todoItemText}
+                       <button onClick={this.props.onUserRemove.bind(null,this.props.itemNumber)} > Done! </button>
+                    </li>
+        			);
+        	}
+        });
+
+        var TodoList = React.createClass({
+        	render: function() {
+        		// map through todos and create TodoItems
+        		var todos = this.props.todoItems.map(function(todo, index){
+        			return(
+        				<TodoItem 
+        			            onUserRemove={this.props.onUserRemove} 
+        			            key={index}
+        			            todoItemText={todo}
+        			            itemNumber={index} />
+        			      );
+        		}.bind(this));
+
+                return (
+                   <ul>
+                     {todos}
+                   </ul>
+            	   );
+        	}
+        });
+
+        var InputField = React.createClass({
+        	render: function() {
+        		return (
+                   <div>
+                     <input
+                         type="text"
+                         value={this.props.text}
+                         onChange={this.props.onUserChange} />
+                     <input
+                         type="submit"
+                         value="Add to list!"
+                         onClick={this.props.onUserClick} />
+                   </div>
+        		);
+        	}
+        });
+
+        var TodoApp = React.createClass({
+	       getInitialState: function () {
+		        //setup the initial state
+		        return {  
+                    text: '',
+		        	      todos: []
+		        };
+	       },
+
+	       handleChange: function(event) {
+		       //fetch the users inputs as the input field change
+		       console.log(event);
+               this.setState({
+               	   text: event.target.value
+               });
+	       },
+    
+           handleClick: function() {
+               //append to todo list in state when the user clicks the button
+               var todos = this.state.todos;
+               var newTodos = todos.concat([this.state.text]);
+
+               this.setState({
+               	   todos: newTodos,
+               	   text: ''
+               });
+
+           },
+
+           handleRemove: function(index) {
+               // remove the selected item the user deleted
+               // copy the array with slice
+               // then splice(index, 1) and set new state
+
+               var newTodos = this.state.todos.slice();
+               newTodos.splice(index, 1);
+               this.setState({
+                   todos: newTodos
+               });
+               console.log(index);
+           },
+
+    render: function(){
+        return(
+        	<div>
+               <h1>Todo app</h1>
+               <InputField 
+                   onUserChange={this.handleChange} 
+                   text={this.state.text}
+                   onUserClick={this.handleClick}/>
+               <TodoList
+                   todoItems={this.state.todos}
+                   onUserRemove={this.handleRemove} />
+        	</div>
+
+        	);
+    },
+});
+
+React.render(<TodoApp />, document.getElementById('content'));
+
+        </script>
+</html>
